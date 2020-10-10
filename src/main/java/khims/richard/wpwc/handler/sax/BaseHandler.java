@@ -1,4 +1,4 @@
-package khims.richard.wpwc.handler;
+package khims.richard.wpwc.handler.sax;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -13,7 +13,6 @@ public class BaseHandler extends DefaultHandler {
     private List<String> tagsToSkip = new ArrayList<>();
     private StringBuilder buf = new StringBuilder();
 
-    private String currentTag;
     private Queue<String> path = Collections.asLifoQueue(new ArrayDeque<>());
 
     public BaseHandler(Consumer<String> consumer) {
@@ -44,19 +43,19 @@ public class BaseHandler extends DefaultHandler {
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        if (Objects.isNull(path.peek())) return;
-        if (!path.peek().equals(qName)) return;
-        if (tagsToSkip.contains(qName)) return;
+        if (Objects.isNull(path.peek()) || !path.peek().equals(qName) || tagsToSkip.contains(qName)) {
+            buf.setLength(0);
+            return;
+        }
 
-        System.out.println("Element: " + qName);
         path.remove();
         consumer.accept(buf.toString());
     }
 
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
-        if (tagsToSkip.contains(currentTag)) return;
-        buf.append(new String(ch));
+        if (tagsToSkip.contains(path.peek())) return;
+        buf.append(new String(ch, start, length));
     }
 
     public void setTagsToSkip(List<String> tagsToSkip) {

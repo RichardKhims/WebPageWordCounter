@@ -1,7 +1,7 @@
 package khims.richard.wpwc;
 
 import khims.richard.wpwc.consumer.WordCounter;
-import khims.richard.wpwc.handler.BaseHandler;
+import khims.richard.wpwc.handler.sax.BaseHandler;
 import org.ccil.cowan.tagsoup.Parser;
 import org.xml.sax.*;
 
@@ -16,9 +16,12 @@ public class Program {
         xmlReader.setFeature("http://xml.org/sax/features/namespaces", false);
         xmlReader.setFeature("http://xml.org/sax/features/validation", false);
 
-        BaseHandler handler = new BaseHandler(new WordCounter());
-        handler.setTagsToSkip(Arrays.asList("script", "noscript", "style", "meta", "html", "link", "img", "head"));
+        WordCounter wordCounter = new WordCounter();
+        BaseHandler handler = new BaseHandler(wordCounter);
+        handler.setTagsToSkip(Arrays.asList("script", "noscript", "style", "meta", "html", "link", "img", "head", "iframe", "svg", "g", "header", "path", "section", "body", "html", "form", "main", "iblock", "upload", "footer", "input"));
         xmlReader.setContentHandler(handler);
         xmlReader.parse(new InputSource(url.openStream()));
+
+        System.out.println(wordCounter.getMapWords());
     }
 }
