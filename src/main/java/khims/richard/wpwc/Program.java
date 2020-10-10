@@ -11,7 +11,11 @@ import java.util.Arrays;
 
 public class Program {
     public static void main(String[] args) throws Exception {
-        SourceReader uriReader = new UriReader(args[0]);
+        runSaxParser(args[0]);
+    }
+
+    private static void runSaxParser(String uri) throws Exception {
+        SourceReader uriReader = new UriReader(uri);
 
         WordCounter wordCounter = new WordCounter();
         BaseHandler handler = new BaseHandler(wordCounter);
