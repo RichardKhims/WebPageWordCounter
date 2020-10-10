@@ -1,4 +1,4 @@
-package khims.richard.wpwc.handler.sax;
+package khims.richard.wpwc.handler;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -8,14 +8,14 @@ import org.xml.sax.helpers.DefaultHandler;
 import java.util.*;
 import java.util.function.Consumer;
 
-public class BaseHandler extends DefaultHandler {
+public class SaxHandler extends DefaultHandler {
     private Consumer<String> consumer;
     private List<String> tagsToSkip = new ArrayList<>();
     private StringBuilder buf = new StringBuilder();
 
     private Queue<String> path = Collections.asLifoQueue(new ArrayDeque<>());
 
-    public BaseHandler(Consumer<String> consumer) {
+    public SaxHandler(Consumer<String> consumer) {
         this.consumer = consumer;
     }
 

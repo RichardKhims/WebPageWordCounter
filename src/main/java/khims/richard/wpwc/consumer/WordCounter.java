@@ -35,4 +35,13 @@ public class WordCounter implements Consumer<String> {
             mapWords.put(key, currentWordCount + value);
         });
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        mapWords.forEach((key, value) -> {
+            sb.append(key).append(" - ").append(value).append('\n');
+        });
+        return sb.toString();
+    }
 }
