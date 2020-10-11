@@ -13,29 +13,50 @@ import khims.richard.wpwc.writer.FileWriter;
 
 import java.io.InputStream;
 import java.util.Arrays;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Program {
-    public static void main(String[] args) throws Exception {
+    private static final Logger log = LogManager.getLogger(Program.class);
+
+    public static void main(String[] args) {
+        if (args.length < 1) {
+            log.warn("No URI argument given");
+            return;
+        }
+
+        log.info("Start program with argument: " + args[0]);
 //        runSaxParser(args[0]);
         runLineStreamParser(args[0]);
     }
 
-    private static void runLineStreamParser(String uri) throws Exception {
-        SourceReader reader = new UriReader(uri);
-        WordCounter wordCounter = new WordCounter();
-        SourceParser parser = new StreamLineParser(wordCounter);
+    private static void runLineStreamParser(String uri) {
+        try {
+            SourceReader reader = new UriReader(uri);
+            WordCounter wordCounter = new WordCounter();
+            SourceParser parser = new StreamLineParser(wordCounter);
 
-        InputStream read = reader.read();
-        DataWriter writer = new FileWriter("out.html");
-        writer.write(read);
-        read.close();
+            log.info("Reading html from uri: " + uri);
+            InputStream read = reader.read();
 
-        reader = new FileReader("out.html");
-        read = reader.read();
-        parser.parse(read);
-        read.close();
+            log.info("Writing into file");
+            DataWriter writer = new FileWriter("out.html");
+            writer.write(read);
+            read.close();
 
-        System.out.println(wordCounter);
+            log.info("Reading html from file");
+            reader = new FileReader("out.html");
+            read = reader.read();
+
+            log.info("Start parsing html");
+            parser.parse(read);
+            log.info("Finished parsing html");
+            read.close();
+
+            log.info("Result:\n" + wordCounter);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
     }
 
     private static void runSaxParser(String uri) throws Exception {
