@@ -8,6 +8,7 @@ import khims.richard.wpwc.parser.StreamLineParser;
 import khims.richard.wpwc.reader.SourceReader;
 import khims.richard.wpwc.reader.UriReader;
 
+import java.io.InputStream;
 import java.util.Arrays;
 
 public class Program {
@@ -20,7 +21,9 @@ public class Program {
         SourceReader uriReader = new UriReader(uri);
         WordCounter wordCounter = new WordCounter();
         SourceParser parser = new StreamLineParser(wordCounter);
-        parser.parse(uriReader.read());
+        InputStream read = uriReader.read();
+        parser.parse(read);
+        read.close();
 
         System.out.println(wordCounter);
     }
@@ -33,7 +36,9 @@ public class Program {
         handler.setTagsToSkip(Arrays.asList("script", "noscript", "style", "meta", "html", "link", "img", "head", "iframe", "svg", "g", "header", "path", "section", "body", "html", "form", "main", "iblock", "upload", "footer", "input"));
 
         SourceParser parser = new SaxParser(handler);
-        parser.parse(uriReader.read());
+        InputStream read = uriReader.read();
+        parser.parse(read);
+        read.close();
 
         System.out.println(wordCounter);
     }

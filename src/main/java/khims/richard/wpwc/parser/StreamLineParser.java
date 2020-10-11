@@ -3,7 +3,6 @@ package khims.richard.wpwc.parser;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
 
 public class StreamLineParser implements SourceParser {
@@ -15,7 +14,7 @@ public class StreamLineParser implements SourceParser {
 
     @Override
     public void parse(InputStream input) throws Exception {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(input));
         String line;
         while ((line = reader.readLine()) != null) {
             consumer.accept(line);
