@@ -5,8 +5,11 @@ import khims.richard.wpwc.handler.SaxHandler;
 import khims.richard.wpwc.parser.SaxParser;
 import khims.richard.wpwc.parser.SourceParser;
 import khims.richard.wpwc.parser.StreamLineParser;
+import khims.richard.wpwc.reader.FileReader;
 import khims.richard.wpwc.reader.SourceReader;
 import khims.richard.wpwc.reader.UriReader;
+import khims.richard.wpwc.writer.DataWriter;
+import khims.richard.wpwc.writer.FileWriter;
 
 import java.io.InputStream;
 import java.util.Arrays;
@@ -18,10 +21,17 @@ public class Program {
     }
 
     private static void runLineStreamParser(String uri) throws Exception {
-        SourceReader uriReader = new UriReader(uri);
+        SourceReader reader = new UriReader(uri);
         WordCounter wordCounter = new WordCounter();
         SourceParser parser = new StreamLineParser(wordCounter);
-        InputStream read = uriReader.read();
+
+        InputStream read = reader.read();
+        DataWriter writer = new FileWriter("out.html");
+        writer.write(read);
+        read.close();
+
+        reader = new FileReader("out.html");
+        read = reader.read();
         parser.parse(read);
         read.close();
 
